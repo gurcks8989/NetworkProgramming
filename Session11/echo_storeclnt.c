@@ -51,8 +51,25 @@ void read_routine(int sock, char *buf)
 	fp = fopen("echoclntmsg.txt", "w");
 	
 	// TODO: create pipe & fork 
+	pipe(fds) ;
+	pid2 = fork() ;
 
 	// TODO: store received echo message 
+	if (pid2 == 0)
+	{
+		char msgbuf[BUF_SIZE];
+		int i, len;
+
+		for (i = 0; i < 10; i++)
+		{
+			len = read(fds[0], msgbuf, BUF_SIZE);
+			fwrite((void*)msgbuf, 1, len, fp);
+			fflush(fp) ;
+		}
+		fclose(fp);
+		return ;
+	}
+
 
 	while (1)
 	{
@@ -62,17 +79,19 @@ void read_routine(int sock, char *buf)
 		{
 			fclose(fp);
 			kill(pid2, SIGKILL);
-			return;
+			return ;
 		}
 
 		buf[str_len] = 0;
 		printf("Message from server: %s", buf);
 	}
 }
+
 void write_routine(int sock, char *buf)
 {
 	while (1)
 	{
+		fputs("Input message(Q to quit): ", stdout);
 		fgets (buf, BUF_SIZE, stdin);
 
 		if (!strcmp(buf,"q\n") || !strcmp(buf,"Q\n"))
