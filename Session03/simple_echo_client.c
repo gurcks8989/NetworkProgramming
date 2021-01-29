@@ -45,19 +45,8 @@ int main(int argc, char *argv[])
 	// TODO: 4. read message from server 
 	str_len = read(sock, message, BUF_SIZE-1) ;
 	message[str_len] = 0 ;
-/*
-	while (read_len = read(sock, &message[idx++], 1))
-	{
- 		if (read_len == -1)
- 		{
- 			error_handling("read() error!");
- 			break;
-   	}
-    str_len += read_len;
-  }
-	*/
-	printf("Message from server: %s", message);
 	
+	printf("Message from server: %s", message);
 
 	close(sock);
 	return 0;
